@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>The Hour of the Wolf</title>
+<title>Vampire Countdown Clock</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
 
@@ -51,6 +51,29 @@ html,body{
   display:flex;
   flex-direction:column;
   align-items:center;
+}
+
+.site-nav{
+  text-align:center;
+  font-size:12px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  margin-bottom:20px;
+}
+.site-nav a{
+  color:var(--parchment);
+  text-decoration:none;
+  opacity:0.6;
+}
+.site-nav a:hover{ opacity:1; color:var(--candle-bright); }
+.site-nav .current{
+  color:var(--candle-bright);
+  opacity:1;
+}
+.site-nav .sep{
+  color:var(--blood);
+  margin:0 10px;
+  opacity:0.6;
 }
 
 h1{
@@ -231,6 +254,14 @@ footer{ color:#5a4a4a; font-size:13px; font-style:italic; margin-top:8px; }
 <div class="fog"></div>
 
 <div class="stage">
+  <nav class="site-nav">
+    <a href="index.html">Home</a>
+    <span class="sep">&middot;</span>
+    <a href="shiki_fate_wheel.html">Wheel of Fates</a>
+    <span class="sep">&middot;</span>
+    <span class="current">Hour of the Wolf</span>
+  </nav>
+
   <h1>The Hour of the Wolf</h1>
   <p class="subtitle">When the sand runs out, so does your time.</p>
 
