@@ -56,6 +56,29 @@ html,body{
   align-items:center;
 }
 
+.site-nav{
+  text-align:center;
+  font-size:12px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  margin-bottom:20px;
+}
+.site-nav a{
+  color:var(--parchment);
+  text-decoration:none;
+  opacity:0.6;
+}
+.site-nav a:hover{ opacity:1; color:var(--candle-bright); }
+.site-nav .current{
+  color:var(--candle-bright);
+  opacity:1;
+}
+.site-nav .sep{
+  color:var(--blood);
+  margin:0 10px;
+  opacity:0.6;
+}
+
 h1{
   font-family:'Cinzel Decorative',serif;
   font-weight:900;
@@ -307,6 +330,14 @@ footer{
 <div class="fog"></div>
 
 <div class="stage">
+  <nav class="site-nav">
+    <a href="index.html">Home</a>
+    <span class="sep">&middot;</span>
+    <span class="current">Wheel of Fates</span>
+    <span class="sep">&middot;</span>
+    <a href="vampire_countdown.html">Vampire Countdown Clock</a>
+  </nav>
+
   <h1>The Wheel of Fates</h1>
   <p class="subtitle">Spin it, and let the village decide who is chosen.</p>
 
