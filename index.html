@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sparklegremlin Palace</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root{
+  --parchment: #f3e2b3;
+  --parchment-deep: #e8cd8b;
+  --gold: #b8862f;
+  --gold-bright: #d9a63f;
+  --maroon: #7a2e1f;
+  --forest: #47603f;
+  --ink: #3a2b1a;
+}
+
+*{ box-sizing:border-box; }
+
+html,body{
+  margin:0;
+  padding:0;
+  background:
+    radial-gradient(ellipse at 50% -10%, #fff6dd 0%, var(--parchment) 45%, #e0c17e 100%);
+  min-height:100vh;
+  font-family:'Cormorant Garamond',serif;
+  color:var(--ink);
+}
+
+.wrap{
+  max-width:760px;
+  margin:0 auto;
+  padding:34px 20px 70px;
+}
+
+.banner-frame{
+  border:6px solid var(--gold);
+  border-radius:4px;
+  box-shadow: 0 0 0 1px var(--maroon), 0 10px 30px rgba(122,46,31,0.25);
+  overflow:hidden;
+  margin-bottom:36px;
+}
+.banner-frame img{
+  display:block;
+  width:100%;
+  height:auto;
+}
+
+.tagline{
+  text-align:center;
+  font-style:italic;
+  font-size:19px;
+  color:var(--forest);
+  margin:0 0 40px;
+  letter-spacing:0.02em;
+}
+
+.divider{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin:0 0 34px;
+}
+.divider::before,.divider::after{
+  content:'';
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.divider span{
+  font-family:'Cinzel Decorative',serif;
+  font-size:12px;
+  letter-spacing:0.25em;
+  text-transform:uppercase;
+  color:var(--gold);
+}
+
+.tools{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.tool-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  background: linear-gradient(180deg, #fbf1d6, #f0dcaa);
+  border:1px solid var(--gold);
+  border-radius:6px;
+  padding:22px 26px;
+  text-decoration:none;
+  color:var(--ink);
+  box-shadow: 0 4px 14px rgba(122,46,31,0.12), inset 0 0 0 1px rgba(255,255,255,0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.tool-card:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(122,46,31,0.22), inset 0 0 0 1px rgba(255,255,255,0.5);
+}
+
+.tool-text h2{
+  font-family:'Cinzel Decorative',serif;
+  font-size:22px;
+  margin:0 0 6px;
+  color:var(--maroon);
+  letter-spacing:0.02em;
+}
+.tool-text p{
+  margin:0;
+  font-size:16px;
+  color:#5a4a35;
+}
+
+.tool-arrow{
+  font-family:'Cinzel Decorative',serif;
+  font-size:22px;
+  color:var(--gold);
+  flex-shrink:0;
+}
+
+.tool-card.disabled{
+  opacity:0.55;
+  pointer-events:none;
+  border-style:dashed;
+}
+
+footer{
+  text-align:center;
+  margin-top:50px;
+  font-size:14px;
+  font-style:italic;
+  color:#8a7350;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="banner-frame">
+    <img src="SGP.png" alt="Sparklegremlin Palace">
+  </div>
+
+  <p class="tagline">A home for our stories, our rolls, and our roles.</p>
+
+  <div class="divider"><span>Tools</span></div>
+
+  <div class="tools">
+    <a class="tool-card" href="shiki_fate_wheel.html">
+      <div class="tool-text">
+        <h2>The Wheel of Fates</h2>
+        <p>Spin for tie-breaks, votes, and moments where fate should decide.</p>
+      </div>
+      <div class="tool-arrow">&#10148;</div>
+    </a>
+
+    <div class="tool-card disabled">
+      <div class="tool-text">
+        <h2>More Coming Soon</h2>
+        <p>Additional tools for the toolkit will appear here.</p>
+      </div>
+      <div class="tool-arrow">&#10022;</div>
+    </div>
+  </div>
+
+  <footer>Sparklegremlin Palace &middot; Roleplay Fun Tools</footer>
+</div>
+</body>
+</html>
