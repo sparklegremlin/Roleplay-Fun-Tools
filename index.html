@@ -127,6 +127,29 @@ html,body{
   border-style:dashed;
 }
 
+.site-nav{
+  text-align:center;
+  font-size:12px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  margin-bottom:22px;
+}
+.site-nav a{
+  color:var(--ink);
+  text-decoration:none;
+  opacity:0.6;
+}
+.site-nav a:hover{ opacity:1; color:var(--maroon); }
+.site-nav .current{
+  color:var(--gold);
+  opacity:1;
+}
+.site-nav .sep{
+  color:var(--gold);
+  margin:0 10px;
+  opacity:0.5;
+}
+
 footer{
   text-align:center;
   margin-top:50px;
@@ -138,6 +161,14 @@ footer{
 </head>
 <body>
 <div class="wrap">
+
+  <nav class="site-nav">
+    <span class="current">Home</span>
+    <span class="sep">&middot;</span>
+    <a href="shiki_fate_wheel.html">Wheel of Fates</a>
+    <span class="sep">&middot;</span>
+    <a href="vampire_countdown.html">Hour of the Wolf</a>
+  </nav>
 
   <div class="banner-frame">
     <img src="SGP.png" alt="Sparklegremlin Palace">
@@ -156,13 +187,13 @@ footer{
       <div class="tool-arrow">&#10148;</div>
     </a>
 
-    <div class="tool-card disabled">
+    <a class="tool-card" href="vampire_countdown.html">
       <div class="tool-text">
-        <h2>More Coming Soon</h2>
-        <p>Additional tools for the toolkit will appear here.</p>
+        <h2>Vampire Countdown Clock</h2>
+        <p>A countdown timer for Night, Day, and Vote phases.</p>
       </div>
-      <div class="tool-arrow">&#10022;</div>
-    </div>
+      <div class="tool-arrow">&#10148;</div>
+    </a>
   </div>
 
   <footer>Sparklegremlin Palace &middot; Roleplay Fun Tools</footer>
