@@ -177,9 +177,9 @@ canvas#wheel{
   inset:0;
   border-radius:50%;
   pointer-events:none;
-  border: 6px solid transparent;
-  background: linear-gradient(#0a0709,#0a0709) padding-box,
-              conic-gradient(from 0deg, #6a5424, var(--candle), #6a5424, #2a1f0d, var(--candle), #6a5424) border-box;
+  background: conic-gradient(from 0deg, #6a5424, var(--candle), #6a5424, #2a1f0d, var(--candle), #6a5424);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 calc(100% - 6px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 calc(100% - 6px));
   box-shadow: 0 0 0 2px #1a1013, inset 0 0 20px rgba(0,0,0,0.6);
 }
 .pointer{
@@ -361,6 +361,7 @@ const center = size/2;
 const radius = size/2 - 6;
 
 const palette = ['#5a1017','#241417'];
+const seamColor = '#3a0a0e';
 
 let names = ['Villager One','Villager Two','Villager Three','Villager Four'];
 let rotation = 0;
@@ -406,7 +407,7 @@ function drawWheel(){
     ctx.moveTo(0,0);
     ctx.arc(0,0,radius,start,end);
     ctx.closePath();
-    ctx.fillStyle = palette[i % palette.length];
+    ctx.fillStyle = (n % 2 === 1 && i === n - 1) ? seamColor : palette[i % palette.length];
     ctx.fill();
     ctx.strokeStyle = 'rgba(201,162,75,0.35)';
     ctx.lineWidth = 1.5;
