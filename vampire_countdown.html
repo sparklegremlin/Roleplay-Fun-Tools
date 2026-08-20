@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Hour of the Wolf</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root{
+  --void: #0a0709;
+  --dried-blood: #4a0e0e;
+  --blood: #7a1620;
+  --blood-bright: #a8232e;
+  --candle: #c9a24b;
+  --candle-bright: #e8c877;
+  --parchment: #ddd0b8;
+}
+
+*{ box-sizing:border-box; }
+
+html,body{
+  margin:0;
+  padding:0;
+  min-height:100vh;
+  background: radial-gradient(ellipse at 50% 20%, #1a1013 0%, var(--void) 60%, #030202 100%);
+  font-family:'Cormorant Garamond',serif;
+  color:var(--parchment);
+  overflow-x:hidden;
+}
+
+.fog{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    radial-gradient(ellipse at 15% 100%, rgba(200,190,180,0.05) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 100%, rgba(200,190,180,0.05) 0%, transparent 45%);
+  animation: drift 18s ease-in-out infinite alternate;
+}
+@keyframes drift{
+  0%{ transform: translateX(-2%); }
+  100%{ transform: translateX(2%); }
+}
+
+.stage{
+  position:relative;
+  z-index:1;
+  max-width:560px;
+  margin:0 auto;
+  padding:36px 20px 60px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+h1{
+  font-family:'Cinzel Decorative',serif;
+  font-weight:900;
+  font-size:clamp(22px,5vw,34px);
+  letter-spacing:0.04em;
+  color:var(--candle-bright);
+  text-align:center;
+  margin:6px 0 2px;
+  text-shadow: 0 0 18px rgba(201,162,75,0.35), 0 0 2px rgba(0,0,0,0.8);
+}
+.subtitle{
+  text-align:center;
+  font-style:italic;
+  color:#a89a86;
+  font-size:16px;
+  margin:0 0 30px;
+}
+
+/* the moon ring */
+.ring-wrap{
+  position:relative;
+  width:min(74vw,320px);
+  height:min(74vw,320px);
+  margin-bottom:26px;
+}
+.ring-glow{
+  position:absolute;
+  inset:-26px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(122,22,32,0.22) 0%, transparent 70%);
+  filter:blur(8px);
+  animation:pulse 2.6s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{ opacity:0.5; }
+  50%{ opacity:1; }
+}
+svg#ring{ position:relative; transform:rotate(-90deg); }
+.ring-bg{ fill:none; stroke:#241417; stroke-width:10; }
+.ring-fg{
+  fill:none;
+  stroke:url(#bloodGrad);
+  stroke-width:10;
+  stroke-linecap:round;
+  transition: stroke-dashoffset 1s linear;
+}
+.time-display{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+.time-num{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(34px,9vw,52px);
+  color:var(--candle-bright);
+  text-shadow: 0 0 20px rgba(201,162,75,0.5);
+  letter-spacing:0.02em;
+}
+.phase-label{
+  font-size:14px;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--blood-bright);
+  margin-top:4px;
+}
+
+/* presets */
+.presets{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-bottom:20px;
+}
+.preset-btn{
+  font-family:'Cormorant Garamond',serif;
+  font-size:15px;
+  letter-spacing:0.03em;
+  background:none;
+  border:1px solid var(--dried-blood);
+  color:var(--parchment);
+  padding:8px 16px;
+  border-radius:2px;
+  cursor:pointer;
+}
+.preset-btn:hover{ background:rgba(122,22,32,0.15); border-color:var(--blood); }
+.preset-btn.active{ background:rgba(122,22,32,0.3); border-color:var(--blood-bright); color:var(--candle-bright); }
+
+/* custom input */
+.custom-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:28px;
+}
+.custom-row input{
+  width:64px;
+  background:#150f11;
+  border:1px solid #3a2226;
+  color:var(--parchment);
+  font-family:'Cormorant Garamond',serif;
+  font-size:17px;
+  text-align:center;
+  padding:7px 4px;
+  border-radius:2px;
+  outline:none;
+}
+.custom-row input:focus{ border-color:var(--blood); }
+.custom-row span{ color:#8a7a7a; font-size:14px; }
+
+/* controls */
+.controls{ display:flex; gap:14px; }
+.main-btn{
+  font-family:'Cinzel Decorative',serif;
+  font-size:15px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  background: linear-gradient(180deg,#5a1017,#3a0a0e);
+  color:var(--candle-bright);
+  border:1px solid var(--blood);
+  padding:12px 30px;
+  border-radius:3px;
+  cursor:pointer;
+  box-shadow: 0 0 16px rgba(122,22,32,0.3), inset 0 0 10px rgba(0,0,0,0.5);
+}
+.main-btn:hover{ box-shadow: 0 0 24px rgba(122,22,32,0.55), inset 0 0 10px rgba(0,0,0,0.5); }
+.ghost-btn{
+  font-family:'Cormorant Garamond',serif;
+  font-size:15px;
+  background:none;
+  border:1px solid #3a2226;
+  color:#a89a86;
+  padding:12px 22px;
+  border-radius:3px;
+  cursor:pointer;
+}
+.ghost-btn:hover{ border-color:var(--blood); color:var(--parchment); }
+
+/* end veil */
+.veil{
+  position:fixed; inset:0;
+  background: rgba(30,2,4,0.92);
+  display:flex; align-items:center; justify-content:center;
+  z-index:10; opacity:0; pointer-events:none;
+  transition: opacity 0.6s ease;
+}
+.veil.show{ opacity:1; pointer-events:auto; animation: flash 0.6s ease; }
+@keyframes flash{ 0%{ background: rgba(122,22,32,0.95); } 100%{ background: rgba(30,2,4,0.92); } }
+.veil-text{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(26px,6vw,40px);
+  color:var(--candle-bright);
+  text-align:center;
+  text-shadow: 0 0 26px rgba(168,35,46,0.8);
+  margin-bottom:20px;
+}
+.veil button{
+  display:block;
+  margin:0 auto;
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  background:none; border:none;
+  color:var(--parchment);
+  text-decoration:underline;
+  cursor:pointer;
+  font-size:15px;
+}
+
+footer{ color:#5a4a4a; font-size:13px; font-style:italic; margin-top:8px; }
+</style>
+</head>
+<body>
+<div class="fog"></div>
+
+<div class="stage">
+  <h1>The Hour of the Wolf</h1>
+  <p class="subtitle">When the sand runs out, so does your time.</p>
+
+  <div class="ring-wrap">
+    <div class="ring-glow"></div>
+    <svg id="ring" width="100%" height="100%" viewBox="0 0 220 220">
+      <defs>
+        <linearGradient id="bloodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#e8c877"/>
+          <stop offset="45%" stop-color="#a8232e"/>
+          <stop offset="100%" stop-color="#4a0e0e"/>
+        </linearGradient>
+        <linearGradient id="dayGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#f4d35e"/>
+          <stop offset="50%" stop-color="#8fb3c9"/>
+          <stop offset="100%" stop-color="#2b5c8a"/>
+        </linearGradient>
+        <linearGradient id="nightGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#8a5fc9"/>
+          <stop offset="50%" stop-color="#5a4fb0"/>
+          <stop offset="100%" stop-color="#2b3f8a"/>
+        </linearGradient>
+      </defs>
+      <circle class="ring-bg" cx="110" cy="110" r="98"></circle>
+      <circle class="ring-fg" id="ringFg" cx="110" cy="110" r="98"></circle>
+    </svg>
+    <div class="time-display">
+      <div class="time-num" id="timeNum">03:00</div>
+      <div class="phase-label" id="phaseLabel">Night Phase</div>
+    </div>
+  </div>
+
+  <div class="presets">
+    <button class="preset-btn active" data-secs="180" data-label="Night Phase" data-grad="nightGrad" data-color="#a58fe0">Night &middot; 3 min</button>
+    <button class="preset-btn" data-secs="720" data-label="Day Phase" data-grad="dayGrad" data-color="#f4d35e">Day &middot; 12 min</button>
+    <button class="preset-btn" data-secs="60" data-label="Final Vote" data-grad="bloodGrad" data-color="#e8c877">Vote &middot; 1 min</button>
+  </div>
+
+  <div class="custom-row">
+    <span>Custom:</span>
+    <input type="number" id="customMin" min="0" max="99" placeholder="mm">
+    <span>:</span>
+    <input type="number" id="customSec" min="0" max="59" placeholder="ss">
+    <button class="ghost-btn" id="setCustom" style="padding:7px 14px;font-size:14px;">Set</button>
+  </div>
+
+  <div class="controls">
+    <button class="main-btn" id="startPause">Begin</button>
+    <button class="ghost-btn" id="resetBtn">Reset</button>
+  </div>
+
+  <footer>The wheel decides who. The clock decides when.</footer>
+</div>
+
+<div class="veil" id="veil">
+  <div>
+    <div class="veil-text" id="veilText">Time Has Run Out</div>
+    <button id="closeVeil">close the veil</button>
+  </div>
+</div>
+
+<script>
+const ring = document.getElementById('ringFg');
+const radius = 98;
+const circumference = 2 * Math.PI * radius;
+ring.style.strokeDasharray = circumference;
+ring.style.strokeDashoffset = 0;
+
+let totalSecs = 180;
+let remaining = 180;
+let phaseLabel = 'Night Phase';
+let running = false;
+let intervalId = null;
+
+const timeNum = document.getElementById('timeNum');
+const phaseLabelEl = document.getElementById('phaseLabel');
+const startPauseBtn = document.getElementById('startPause');
+const veil = document.getElementById('veil');
+
+let audioCtx = null;
+function playToll(){
+  try{
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const now = audioCtx.currentTime;
+    for(let i=0;i<3;i++){
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 130;
+      gain.gain.setValueAtTime(0.0001, now + i*0.9);
+      gain.gain.exponentialRampToValueAtTime(0.35, now + i*0.9 + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + i*0.9 + 0.8);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now + i*0.9);
+      osc.stop(now + i*0.9 + 0.85);
+    }
+  }catch(e){}
+}
+
+function format(s){
+  const m = Math.floor(s/60).toString().padStart(2,'0');
+  const sec = (s%60).toString().padStart(2,'0');
+  return m + ':' + sec;
+}
+
+function render(){
+  timeNum.textContent = format(remaining);
+  const frac = totalSecs > 0 ? remaining/totalSecs : 0;
+  ring.style.strokeDashoffset = circumference * (1-frac);
+  phaseLabelEl.textContent = phaseLabel;
+}
+
+function tick(){
+  if(remaining <= 0){
+    stop();
+    playToll();
+    document.getElementById('veilText').textContent = phaseLabel + ' Has Ended';
+    veil.classList.add('show');
+    return;
+  }
+  remaining -= 1;
+  render();
+}
+
+function start(){
+  if(running || remaining <= 0) return;
+  running = true;
+  startPauseBtn.textContent = 'Pause';
+  intervalId = setInterval(tick, 1000);
+}
+function pause(){
+  running = false;
+  startPauseBtn.textContent = 'Resume';
+  clearInterval(intervalId);
+}
+function stop(){
+  running = false;
+  startPauseBtn.textContent = 'Begin';
+  clearInterval(intervalId);
+}
+
+document.querySelectorAll('.preset-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    totalSecs = parseInt(btn.dataset.secs,10);
+    remaining = totalSecs;
+    phaseLabel = btn.dataset.label;
+    setAccent(btn.dataset.grad, btn.dataset.color);
+    stop();
+    render();
+  });
+});
+
+function setAccent(gradId, color){
+  ring.style.stroke = 'url(#' + gradId + ')';
+  timeNum.style.color = color;
+  timeNum.style.textShadow = '0 0 20px ' + color + '80';
+}
+setAccent('nightGrad', '#a58fe0');
+
+document.getElementById('setCustom').addEventListener('click', ()=>{
+  const m = parseInt(document.getElementById('customMin').value,10) || 0;
+  const s = parseInt(document.getElementById('customSec').value,10) || 0;
+  const secs = m*60 + s;
+  if(secs <= 0) return;
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+  totalSecs = secs;
+  remaining = secs;
+  phaseLabel = 'Custom Countdown';
+  setAccent('bloodGrad', '#e8c877');
+  stop();
+  render();
+});
+
+startPauseBtn.addEventListener('click', ()=>{
+  if(running){ pause(); } else { start(); }
+});
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  stop();
+  remaining = totalSecs;
+  render();
+});
+document.getElementById('closeVeil').addEventListener('click', ()=>{
+  veil.classList.remove('show');
+});
+
+render();
+</script>
+</body>
+</html>
