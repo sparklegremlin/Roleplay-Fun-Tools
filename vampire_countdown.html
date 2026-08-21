@@ -289,15 +289,15 @@ footer{ color:#5a4a4a; font-size:13px; font-style:italic; margin-top:8px; }
       <circle class="ring-fg" id="ringFg" cx="110" cy="110" r="98"></circle>
     </svg>
     <div class="time-display">
-      <div class="time-num" id="timeNum">03:00</div>
+      <div class="time-num" id="timeNum">04:00</div>
       <div class="phase-label" id="phaseLabel">Night Phase</div>
     </div>
   </div>
 
   <div class="presets">
-    <button class="preset-btn active" data-secs="180" data-label="Night Phase" data-grad="nightGrad" data-color="#a58fe0">Night &middot; 3 min</button>
-    <button class="preset-btn" data-secs="720" data-label="Day Phase" data-grad="dayGrad" data-color="#f4d35e">Day &middot; 12 min</button>
-    <button class="preset-btn" data-secs="60" data-label="Final Vote" data-grad="bloodGrad" data-color="#e8c877">Vote &middot; 1 min</button>
+    <button class="preset-btn active" data-secs="240" data-label="Discussion" data-grad="dayGrad" data-color="#f4d35e">Discussion &middot; 4 min</button>
+    <button class="preset-btn" data-secs="120" data-label="Vote" data-grad="bloodGrad" data-color="#e8c877">Vote &middot; 2 min</button>
+    <button class="preset-btn" data-secs="180" data-label="Sleep" data-grad="nightGrad" data-color="#a58fe0">Sleep &middot; 3 min</button>
   </div>
 
   <div class="custom-row">
@@ -340,9 +340,9 @@ const circumference = 2 * Math.PI * radius;
 ring.style.strokeDasharray = circumference;
 ring.style.strokeDashoffset = 0;
 
-let totalSecs = 180;
-let remaining = 180;
-let phaseLabel = 'Night Phase';
+let totalSecs = 240;
+let remaining = 240;
+let phaseLabel = 'Discussion';
 let running = false;
 let intervalId = null;
 
@@ -443,7 +443,7 @@ function setAccent(gradId, color){
   timeNum.style.color = color;
   timeNum.style.textShadow = '0 0 20px ' + color + '80';
 }
-setAccent('nightGrad', '#a58fe0');
+setAccent('dayGrad', '#f4d35e');
 
 document.getElementById('setCustom').addEventListener('click', ()=>{
   const m = parseInt(document.getElementById('customMin').value,10) || 0;
