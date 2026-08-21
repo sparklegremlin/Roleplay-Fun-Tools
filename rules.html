@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Village at Carmilla's Gate — Rules</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root{
+  --void: #0a0709;
+  --dried-blood: #4a0e0e;
+  --blood: #7a1620;
+  --blood-bright: #a8232e;
+  --candle: #c9a24b;
+  --candle-bright: #e8c877;
+  --parchment: #ddd0b8;
+}
+
+*{ box-sizing:border-box; }
+
+html,body{
+  margin:0;
+  padding:0;
+  min-height:100vh;
+  background: radial-gradient(ellipse at 50% 10%, #1a1013 0%, var(--void) 55%, #030202 100%);
+  font-family:'Cormorant Garamond',serif;
+  color:var(--parchment);
+}
+
+.wrap{
+  max-width:900px;
+  margin:0 auto;
+  padding:34px 20px 70px;
+}
+
+.site-nav{
+  text-align:center;
+  font-size:12px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  margin-bottom:20px;
+}
+.site-nav a{ color:var(--parchment); text-decoration:none; opacity:0.6; }
+.site-nav a:hover{ opacity:1; color:var(--candle-bright); }
+.site-nav .current{ color:var(--candle-bright); opacity:1; }
+.site-nav .sep{ color:var(--blood); margin:0 10px; opacity:0.6; }
+
+.banner-frame{
+  border:4px solid var(--dried-blood);
+  border-radius:4px;
+  box-shadow: 0 0 0 1px var(--blood), 0 10px 34px rgba(0,0,0,0.6);
+  overflow:hidden;
+  margin-bottom:34px;
+}
+.banner-frame img{
+  display:block;
+  width:100%;
+  height:auto;
+}
+
+h2{
+  font-family:'Cinzel Decorative',serif;
+  font-weight:900;
+  font-size:22px;
+  letter-spacing:0.04em;
+  color:var(--candle-bright);
+  text-shadow: 0 0 14px rgba(201,162,75,0.3);
+  margin:0 0 14px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--dried-blood);
+}
+
+section{
+  margin-bottom:34px;
+}
+
+p{ line-height:1.7; font-size:17px; }
+
+.components-list{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+.components-list li{
+  padding:8px 0;
+  border-bottom:1px solid rgba(122,22,32,0.25);
+  font-size:17px;
+  line-height:1.5;
+}
+.components-list li:last-child{ border-bottom:none; }
+.components-list b{ color:var(--candle-bright); }
+
+.setup ol{
+  padding-left:22px;
+  margin:0 0 14px;
+  font-size:17px;
+  line-height:1.7;
+}
+.setup ol ul{
+  margin:6px 0 10px;
+  padding-left:22px;
+}
+.setup .dice-note{
+  margin:14px 0;
+  padding-left:22px;
+  font-size:17px;
+}
+.setup .dice-note::before{
+  content: "\2022  ";
+  color: var(--candle);
+}
+
+.phase-order{
+  font-family:'Cinzel Decorative',serif;
+  font-size:15px;
+  line-height:2;
+  text-align:center;
+  color:var(--candle-bright);
+  background:linear-gradient(180deg,#140d10,#0d0709);
+  border:1px solid var(--dried-blood);
+  border-radius:6px;
+  padding:20px;
+}
+
+.roles-frame{
+  border:1px solid var(--dried-blood);
+  border-radius:6px;
+  overflow:hidden;
+  box-shadow: 0 0 24px rgba(0,0,0,0.5);
+}
+.roles-frame img{
+  display:block;
+  width:100%;
+  height:auto;
+}
+
+.win-list{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+.win-list li{
+  padding:10px 0;
+  font-size:17px;
+  border-bottom:1px solid rgba(122,22,32,0.25);
+}
+.win-list li:last-child{ border-bottom:none; }
+.win-list b{ color:var(--candle-bright); }
+
+footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:13px;
+  font-style:italic;
+  color:#5a4a4a;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="site-nav">
+    <a href="index.html">Home</a>
+    <span class="sep">&middot;</span>
+    <a href="shiki_fate_wheel.html">Wheel of Fates</a>
+    <span class="sep">&middot;</span>
+    <a href="vampire_countdown.html">Vampire Countdown Clock</a>
+    <span class="sep">&middot;</span>
+    <a href="the_gathering.html">The Gathering</a>
+    <span class="sep">&middot;</span>
+    <span class="current">Rules</span>
+  </nav>
+
+  <div class="banner-frame">
+    <img src="Carmilla.png" alt="Carmilla, The Vampire Queen">
+  </div>
+
+  <section>
+    <h2>Premise</h2>
+    <p>Queen Carmilla's Castle has parked at the edge of a small town. The priest is dead. The Mayor (DM) is the town's sole authority, judge, and jailer. The villagers must find the vampire before the town runs out of nights.</p>
+    <p>There is no day phase. The entire game takes place across 3 consecutive nights.</p>
+  </section>
+
+  <section>
+    <h2>Components</h2>
+    <ul class="components-list">
+      <li><b>The Gathering</b> — DM tool that deals roles privately.</li>
+      <li><b>The Wheel of Fates</b> — DM uses for Encounter results.</li>
+      <li><b>Vampire Countdown Clock</b> — paces Town Hall discussion.</li>
+      <li><b>Role cards</b> (Villager, Seer, Hunter, Healer, Vampire, Familiar)</li>
+      <li><b>Dice Rolls</b></li>
+      <li><b>Mics</b> only allowed during Discussion and Voting phase. (Optional)</li>
+      <li><b>Kindroids</b> assist you in keeping clues together and advising.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Roles</h2>
+    <div class="roles-frame">
+      <img src="rr.png" alt="Role cards: The Villager, The Seer, The Healer, The Hunter, The Familiar, The Vampire">
+    </div>
+  </section>
+
+  <section class="setup">
+    <h2>Setup</h2>
+    <ol>
+      <li>The Gathering:
+        <ul>
+          <li>Villager is the default/remainder role; add Seer, Hunter, Healer, Vampire, Familiar as you like. One Vampire minimum.</li>
+          <li>30% of players will be villagers. The rest can be comprised of any combination.</li>
+        </ul>
+      </li>
+      <li>Roles are dealt privately via DM. Vampire selects Night 1's victim.</li>
+    </ol>
+    <div class="dice-note">Players roll 1d6 for turn order.</div>
+    <ol>
+      <li>Town Hall: Night 1 opens cold: the Mayor announces the priest's body has been found.
+        <ul>
+          <li>Each player introduces themselves, their kin and their role (Truth Optional)</li>
+        </ul>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Phase Order</h2>
+    <div class="phase-order">Reveal &gt; Dice Roll Event (turn-based) &gt; Discussion &gt; Vote (1 player elected to be caged until morning) &gt; Sleep &gt; End of Day</div>
+  </section>
+
+  <section>
+    <h2>Rolling the Dice</h2>
+    <p>Roll 1d6. The Mayor delivers the encounter outcome.</p>
+  </section>
+
+  <section>
+    <h2>Winning</h2>
+    <ul class="win-list">
+      <li><b>The village wins</b> the moment the Vampire is caged and burns, or a Hunter's stake lands true.</li>
+      <li><b>The Vampire wins</b> if they're still free when only two players remain.</li>
+    </ul>
+  </section>
+
+  <footer>Three nights. One town. Somewhere among you, Carmilla's hunger is wearing a familiar face.</footer>
+</div>
+</body>
+</html>
