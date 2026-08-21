@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Gathering</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root{
+  --void: #0a0709;
+  --dried-blood: #4a0e0e;
+  --blood: #7a1620;
+  --blood-bright: #a8232e;
+  --candle: #c9a24b;
+  --candle-bright: #e8c877;
+  --parchment: #ddd0b8;
+  --familiar-purple: #6a4fb0;
+  --vampire-red: #a8232e;
+  --human: #4a7a5a;
+}
+
+*{ box-sizing:border-box; }
+
+html,body{
+  margin:0;
+  padding:0;
+  min-height:100vh;
+  background: radial-gradient(ellipse at 50% 10%, #1a1013 0%, var(--void) 55%, #030202 100%);
+  font-family:'Cormorant Garamond',serif;
+  color:var(--parchment);
+}
+
+.wrap{
+  max-width:900px;
+  margin:0 auto;
+  padding:34px 20px 70px;
+}
+
+.site-nav{
+  text-align:center;
+  font-size:12px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  margin-bottom:20px;
+}
+.site-nav a{ color:var(--parchment); text-decoration:none; opacity:0.6; }
+.site-nav a:hover{ opacity:1; color:var(--candle-bright); }
+.site-nav .current{ color:var(--candle-bright); opacity:1; }
+.site-nav .sep{ color:var(--blood); margin:0 10px; opacity:0.6; }
+
+h1{
+  font-family:'Cinzel Decorative',serif;
+  font-weight:900;
+  font-size:clamp(24px,5vw,36px);
+  letter-spacing:0.04em;
+  color:var(--candle-bright);
+  text-align:center;
+  margin:6px 0 2px;
+  text-shadow: 0 0 18px rgba(201,162,75,0.35), 0 0 2px rgba(0,0,0,0.8);
+}
+.subtitle{
+  text-align:center;
+  font-style:italic;
+  color:#a89a86;
+  font-size:16px;
+  margin:0 0 32px;
+}
+
+.panel{
+  background:linear-gradient(180deg,#140d10,#0d0709);
+  border:1px solid var(--dried-blood);
+  border-radius:6px;
+  padding:20px 22px;
+  margin-bottom:22px;
+  box-shadow: inset 0 0 24px rgba(122,22,32,0.06);
+}
+.panel-label{
+  font-family:'Cinzel Decorative',serif;
+  font-size:14px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--candle);
+  margin-bottom:14px;
+}
+
+textarea#playerNames{
+  width:100%;
+  min-height:120px;
+  background:#150f11;
+  border:1px solid #3a2226;
+  color:var(--parchment);
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px;
+  padding:10px 12px;
+  border-radius:3px;
+  outline:none;
+  resize:vertical;
+}
+textarea#playerNames:focus{ border-color:var(--blood); box-shadow:0 0 6px rgba(122,22,32,0.5); }
+.hint{ font-size:13px; color:#8a7a7a; margin-top:6px; font-style:italic; }
+
+.deck-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+  gap:14px;
+  margin-top:8px;
+}
+.deck-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#150f11;
+  border:1px solid #3a2226;
+  border-radius:3px;
+  padding:10px 12px;
+}
+.deck-row .label{ font-size:15px; }
+.deck-row .label small{ display:block; color:#8a7a7a; font-size:12px; font-style:italic; }
+.stepper{ display:flex; align-items:center; gap:8px; }
+.stepper button{
+  width:26px; height:26px;
+  background:none;
+  border:1px solid var(--dried-blood);
+  color:var(--parchment);
+  border-radius:3px;
+  cursor:pointer;
+  font-size:15px;
+  line-height:1;
+}
+.stepper button:hover{ background:rgba(122,22,32,0.2); border-color:var(--blood); }
+.stepper span{ min-width:18px; text-align:center; font-size:16px; color:var(--candle-bright); }
+
+.deck-divider{
+  font-family:'Cinzel Decorative',serif;
+  font-size:12px;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--gold, var(--candle));
+  margin:18px 0 8px;
+  opacity:0.8;
+}
+
+.status-line{
+  margin-top:14px;
+  font-size:14px;
+  padding:8px 10px;
+  border-radius:3px;
+}
+.status-ok{ color:#8fd18f; background:rgba(60,120,60,0.12); }
+.status-bad{ color:#e08a8a; background:rgba(120,30,30,0.15); }
+
+.main-btn{
+  font-family:'Cinzel Decorative',serif;
+  font-size:16px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  background: linear-gradient(180deg,#5a1017,#3a0a0e);
+  color:var(--candle-bright);
+  border:1px solid var(--blood);
+  padding:13px 32px;
+  border-radius:3px;
+  cursor:pointer;
+  box-shadow: 0 0 16px rgba(122,22,32,0.3), inset 0 0 10px rgba(0,0,0,0.5);
+  display:block;
+  margin:6px auto 0;
+}
+.main-btn:hover{ box-shadow: 0 0 24px rgba(122,22,32,0.55), inset 0 0 10px rgba(0,0,0,0.5); }
+.main-btn:disabled{ opacity:0.4; cursor:default; box-shadow:none; }
+
+.ghost-btn{
+  font-family:'Cormorant Garamond',serif;
+  font-size:14px;
+  background:none;
+  border:1px solid #3a2226;
+  color:#a89a86;
+  padding:8px 16px;
+  border-radius:3px;
+  cursor:pointer;
+}
+.ghost-btn:hover{ border-color:var(--blood); color:var(--parchment); }
+
+.roster{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px,1fr));
+  gap:14px;
+}
+.player-card{
+  background:linear-gradient(180deg,#160e11,#0a0507);
+  border:1px solid var(--dried-blood);
+  border-radius:5px;
+  padding:16px 16px 14px;
+  cursor:pointer;
+  transition: border-color 0.15s;
+}
+.player-card:hover{ border-color:var(--blood); }
+.player-card.dead{
+  opacity:0.55;
+  cursor:default;
+}
+.player-name{
+  font-family:'Cinzel Decorative',serif;
+  font-size:17px;
+  color:var(--candle-bright);
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.player-name .sent-dot{
+  width:8px; height:8px;
+  border-radius:50%;
+  background:#3a3236;
+}
+.player-name .sent-dot.sent{ background:#8fd18f; }
+.player-status{
+  font-size:12px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:#8a7a7a;
+}
+.player-status.dead-tag{ color:var(--blood-bright); }
+.reveal-hint{
+  font-size:12px;
+  font-style:italic;
+  color:#6a5a5a;
+  margin-top:8px;
+}
+
+.dead-role{
+  margin-top:8px;
+  font-size:13px;
+  line-height:1.5;
+}
+.tag{
+  display:inline-block;
+  font-size:11px;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  padding:2px 8px;
+  border-radius:10px;
+  margin-right:6px;
+  margin-top:4px;
+}
+.tag-ability{ background:rgba(201,162,75,0.15); color:var(--candle-bright); border:1px solid rgba(201,162,75,0.4); }
+.tag-vampire{ background:rgba(168,35,46,0.2); color:var(--vampire-red); border:1px solid rgba(168,35,46,0.5); }
+.tag-familiar{ background:rgba(106,79,176,0.2); color:var(--familiar-purple); border:1px solid rgba(106,79,176,0.5); }
+.tag-human{ background:rgba(74,122,90,0.15); color:var(--human); border:1px solid rgba(74,122,90,0.4); }
+
+.veil{
+  position:fixed; inset:0;
+  background: rgba(4,2,3,0.92);
+  display:flex; align-items:center; justify-content:center;
+  z-index:10; opacity:0; pointer-events:none;
+  transition: opacity 0.4s ease;
+  padding:20px;
+}
+.veil.show{ opacity:1; pointer-events:auto; }
+.reveal-card{
+  max-width:480px;
+  width:100%;
+  text-align:center;
+  padding:32px 30px;
+  border:1px solid var(--dried-blood);
+  background: linear-gradient(180deg,#160e11,#0a0507);
+  box-shadow: 0 0 60px rgba(122,22,32,0.35);
+  border-radius:6px;
+  transform: scale(0.9);
+  transition: transform 0.4s cubic-bezier(.2,1.4,.4,1);
+}
+.veil.show .reveal-card{ transform: scale(1); }
+.reveal-eyebrow{
+  font-size:12px;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:#8a6a6a;
+  margin-bottom:8px;
+}
+.reveal-name{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(24px,5vw,32px);
+  color:var(--candle-bright);
+  text-shadow: 0 0 24px rgba(201,162,75,0.5);
+  margin:0 0 14px;
+}
+.reveal-ability{
+  font-family:'Cinzel Decorative',serif;
+  font-size:18px;
+  color:var(--candle-bright);
+  margin-bottom:6px;
+}
+.reveal-text{
+  font-size:16px;
+  line-height:1.6;
+  color:var(--parchment);
+  margin-bottom:10px;
+  white-space:pre-line;
+}
+.reveal-actions{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  margin-top:18px;
+  flex-wrap:wrap;
+}
+.copied-msg{
+  font-size:13px;
+  color:#8fd18f;
+  margin-top:8px;
+  height:16px;
+}
+
+footer{
+  text-align:center;
+  margin-top:40px;
+  font-size:13px;
+  font-style:italic;
+  color:#5a4a4a;
+}
+
+#step1, #step2{ }
+#step2{ display:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="site-nav">
+    <a href="index.html">Home</a>
+    <span class="sep">&middot;</span>
+    <a href="shiki_fate_wheel.html">Wheel of Fates</a>
+    <span class="sep">&middot;</span>
+    <a href="vampire_countdown.html">Vampire Countdown Clock</a>
+    <span class="sep">&middot;</span>
+    <span class="current">The Gathering</span>
+  </nav>
+
+  <h1>The Gathering</h1>
+  <p class="subtitle">Shuffle the cards. Learn what you are.</p>
+
+  <div id="step1">
+    <div class="panel">
+      <div class="panel-label">Villagers Present</div>
+      <textarea id="playerNames" placeholder="One name per line&#10;Amara&#10;Rook&#10;Thistle&#10;..."></textarea>
+      <div class="hint">Enter each player's name on its own line, then build the deck below.</div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-label">Select Roles</div>
+
+      <div class="deck-grid">
+        <div class="deck-row">
+          <div class="label">Villager<small>default role &mdash; fills remaining players</small></div>
+          <div class="stepper">
+            <span id="villagerCount">0</span>
+          </div>
+        </div>
+        <div class="deck-row">
+          <div class="label">Seer<small>learns truth, once</small></div>
+          <div class="stepper">
+            <button onclick="adjust('seer',-1)">&minus;</button>
+            <span id="seerCount">0</span>
+            <button onclick="adjust('seer',1)">+</button>
+          </div>
+        </div>
+        <div class="deck-row">
+          <div class="label">Hunter<small>can stake, once</small></div>
+          <div class="stepper">
+            <button onclick="adjust('hunter',-1)">&minus;</button>
+            <span id="hunterCount">0</span>
+            <button onclick="adjust('hunter',1)">+</button>
+          </div>
+        </div>
+        <div class="deck-row">
+          <div class="label">Healer<small>can shield, once</small></div>
+          <div class="stepper">
+            <button onclick="adjust('healer',-1)">&minus;</button>
+            <span id="healerCount">0</span>
+            <button onclick="adjust('healer',1)">+</button>
+          </div>
+        </div>
+        <div class="deck-row">
+          <div class="label">Vampire<small>feeds each night</small></div>
+          <div class="stepper">
+            <button onclick="adjust('vampire',-1)">&minus;</button>
+            <span id="vampireCount">0</span>
+            <button onclick="adjust('vampire',1)">+</button>
+          </div>
+        </div>
+        <div class="deck-row">
+          <div class="label">Familiar<small>knows the Vampire</small></div>
+          <div class="stepper">
+            <button onclick="adjust('familiar',-1)">&minus;</button>
+            <span id="familiarCount">0</span>
+            <button onclick="adjust('familiar',1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="statusLine" class="status-line status-bad">Enter player names to begin.</div>
+
+      <button class="main-btn" id="dealBtn" onclick="dealCards()" disabled>Shuffle &amp; Deal</button>
+    </div>
+  </div>
+
+  <div id="step2">
+    <div class="panel">
+      <div class="panel-label">The Roster &mdash; click a name to reveal their card</div>
+      <div class="roster" id="roster"></div>
+    </div>
+    <button class="ghost-btn" onclick="resetAll()">Start a New Gathering</button>
+  </div>
+
+  <footer>Fate has already chosen. You are only learning it.</footer>
+</div>
+
+<div class="veil" id="veil">
+  <div class="reveal-card">
+    <div class="reveal-eyebrow">Fate Whispers To</div>
+    <div class="reveal-name" id="revealName">&mdash;</div>
+    <div class="reveal-ability" id="revealAbility"></div>
+    <div class="reveal-text" id="revealText"></div>
+    <div class="reveal-actions">
+      <button class="ghost-btn" id="copyBtn" onclick="copyReveal()">Copy for DM</button>
+      <button class="ghost-btn" onclick="markSent()">Mark as Sent &amp; Close</button>
+      <button class="ghost-btn" onclick="closeVeil()">Close</button>
+    </div>
+    <div class="copied-msg" id="copiedMsg"></div>
+  </div>
+</div>
+
+<script>
+const deck = { villager:0, seer:0, hunter:0, healer:0, vampire:0, familiar:0 };
+let players = [];
+let currentRevealIndex = null;
+
+const abilityText = {
+  Villager: "No power of your own, but your voice carries weight: once per game, your vote at a Staking counts twice.",
+  Seer: "Once per game, you may ask the DM in private whether one player is truly a Vampire. The answer will be the truth.",
+  Hunter: "Once per game, during a Feeding, you may name a suspected Vampire to stake. If you are right, the Castle falls. If you are wrong, your target still dies \u2014 and your gift is spent.",
+  Healer: "Once per game, during a Feeding, you may shield one player from that night's hunger. Choose carefully \u2014 the gift only works once.",
+  Vampire: "Each Feeding, you choose a player to take. If more than one Vampire walks among the village, you share your hunger and must agree on a single target.",
+  Familiar: "You know the true face of the Castle's Vampire(s). Once per game, you may throw yourself between them and the village's judgment, shielding them from a single Staking."
+};
+
+
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function getNames(){
+  return document.getElementById('playerNames').value
+    .split('\n')
+    .map(s=>s.trim())
+    .filter(s=>s.length>0);
+}
+
+function renderDeck(){
+  const n = getNames().length;
+  deck.villager = Math.max(0, n - deck.seer - deck.hunter - deck.healer - deck.vampire - deck.familiar);
+  document.getElementById('villagerCount').textContent = deck.villager;
+  document.getElementById('seerCount').textContent = deck.seer;
+  document.getElementById('hunterCount').textContent = deck.hunter;
+  document.getElementById('healerCount').textContent = deck.healer;
+  document.getElementById('vampireCount').textContent = deck.vampire;
+  document.getElementById('familiarCount').textContent = deck.familiar;
+  validate();
+}
+
+function adjust(key, delta){
+  deck[key] = Math.max(0, deck[key] + delta);
+  renderDeck();
+}
+
+function validate(){
+  const names = getNames();
+  const n = names.length;
+  const namedSum = deck.seer + deck.hunter + deck.healer + deck.vampire + deck.familiar;
+  const status = document.getElementById('statusLine');
+  const btn = document.getElementById('dealBtn');
+
+  if(n===0){
+    status.textContent = "Enter player names to begin.";
+    status.className = "status-line status-bad";
+    btn.disabled = true;
+    return;
+  }
+  if(namedSum > n){
+    status.textContent = "Selected roles (" + namedSum + ") can't exceed " + n + " players.";
+    status.className = "status-line status-bad";
+    btn.disabled = true;
+    return;
+  }
+  if(deck.vampire < 1){
+    status.textContent = "You need at least 1 Vampire in the deck.";
+    status.className = "status-line status-bad";
+    btn.disabled = true;
+    return;
+  }
+  status.textContent = n + " players. " + deck.villager + " will default to Villager. Deck is ready.";
+  status.className = "status-line status-ok";
+  btn.disabled = false;
+}
+
+document.getElementById('playerNames').addEventListener('input', ()=>{
+  renderDeck();
+});
+
+function dealCards(){
+  const names = getNames();
+  const n = names.length;
+
+  const roleDeck = shuffle([
+    ...Array(deck.villager).fill('Villager'),
+    ...Array(deck.seer).fill('Seer'),
+    ...Array(deck.hunter).fill('Hunter'),
+    ...Array(deck.healer).fill('Healer'),
+    ...Array(deck.vampire).fill('Vampire'),
+    ...Array(deck.familiar).fill('Familiar')
+  ]);
+
+  players = names.map((name, i) => ({
+    name,
+    ability: roleDeck[i],
+    alive: true,
+    sent: false
+  }));
+
+  const vampireNames = players.filter(p=>p.ability==='Vampire').map(p=>p.name);
+  players.forEach(p=>{
+    if(p.ability==='Familiar'){
+      p.knownVampires = vampireNames;
+    }
+    if(p.ability==='Vampire'){
+      p.fellowVampires = vampireNames.filter(v=>v!==p.name);
+    }
+  });
+
+  document.getElementById('step1').style.display = 'none';
+  document.getElementById('step2').style.display = 'block';
+  renderRoster();
+}
+
+function renderRoster(){
+  const roster = document.getElementById('roster');
+  roster.innerHTML = '';
+  players.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'player-card' + (p.alive ? '' : ' dead');
+    if(p.alive){
+      card.onclick = () => openReveal(i);
+    }
+
+    let inner = '<div class="player-name">' + escapeHtml(p.name) +
+      '<span class="sent-dot' + (p.sent?' sent':'') + '"></span></div>';
+
+    if(p.alive){
+      inner += '<div class="player-status">Living</div>';
+      inner += '<div class="reveal-hint">Click to reveal &amp; DM</div>';
+    } else {
+      inner += '<div class="player-status dead-tag">Taken / Staked</div>';
+      inner += '<div class="dead-role">';
+      inner += '<span class="tag tag-ability">' + p.ability + '</span>';
+      inner += '</div>';
+    }
+
+    card.innerHTML = inner;
+    if(p.alive){
+      const toggle = document.createElement('button');
+      toggle.className = 'ghost-btn';
+      toggle.style.marginTop = '10px';
+      toggle.style.fontSize = '12px';
+      toggle.textContent = 'Mark as Taken/Staked';
+      toggle.onclick = (e) => { e.stopPropagation(); killPlayer(i); };
+      card.appendChild(toggle);
+    } else {
+      const toggle = document.createElement('button');
+      toggle.className = 'ghost-btn';
+      toggle.style.marginTop = '10px';
+      toggle.style.fontSize = '12px';
+      toggle.textContent = 'Restore to Living';
+      toggle.onclick = (e) => { e.stopPropagation(); revivePlayer(i); };
+      card.appendChild(toggle);
+    }
+
+    roster.appendChild(card);
+  });
+}
+
+function killPlayer(i){
+  players[i].alive = false;
+  renderRoster();
+}
+function revivePlayer(i){
+  players[i].alive = true;
+  renderRoster();
+}
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function buildRevealText(p){
+  let text = abilityText[p.ability];
+  if(p.ability === 'Familiar' && p.knownVampires && p.knownVampires.length){
+    text += "\n\nYour Vampire(s): " + p.knownVampires.join(', ') + ".";
+  }
+  if(p.ability === 'Vampire' && p.fellowVampires && p.fellowVampires.length){
+    text += "\n\nYou share the Castle's hunger with: " + p.fellowVampires.join(', ') + ". You must agree on a single target each Feeding.";
+  }
+  return text;
+}
+
+function openReveal(i){
+  currentRevealIndex = i;
+  const p = players[i];
+  document.getElementById('revealName').textContent = p.name;
+  document.getElementById('revealAbility').textContent = 'The ' + p.ability;
+  document.getElementById('revealText').textContent = buildRevealText(p);
+  document.getElementById('copiedMsg').textContent = '';
+  document.getElementById('veil').classList.add('show');
+}
+
+function closeVeil(){
+  document.getElementById('veil').classList.remove('show');
+  currentRevealIndex = null;
+}
+
+function markSent(){
+  if(currentRevealIndex !== null){
+    players[currentRevealIndex].sent = true;
+    renderRoster();
+  }
+  closeVeil();
+}
+
+function copyReveal(){
+  if(currentRevealIndex === null) return;
+  const p = players[currentRevealIndex];
+  const full = 'You are ' + p.name + '.\n\nRole: The ' + p.ability + '\n' + buildRevealText(p);
+
+  navigator.clipboard.writeText(full).then(()=>{
+    document.getElementById('copiedMsg').textContent = 'Copied \u2014 paste into their DM.';
+  }).catch(()=>{
+    document.getElementById('copiedMsg').textContent = 'Could not copy automatically \u2014 select the text manually.';
+  });
+}
+
+function resetAll(){
+  players = [];
+  document.getElementById('playerNames').value = '';
+  Object.assign(deck, {villager:0,seer:0,hunter:0,healer:0,vampire:0,familiar:0});
+  renderDeck();
+  document.getElementById('step1').style.display = 'block';
+  document.getElementById('step2').style.display = 'none';
+}
+
+renderDeck();
+</script>
+</body>
+</html>
