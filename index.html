@@ -5,7 +5,7 @@
 <title>Sparklegremlin Palace</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
- 
+
 :root{
   --parchment: #f3e2b3;
   --parchment-deep: #e8cd8b;
@@ -15,9 +15,9 @@
   --forest: #47603f;
   --ink: #3a2b1a;
 }
- 
+
 *{ box-sizing:border-box; }
- 
+
 html,body{
   margin:0;
   padding:0;
@@ -27,13 +27,13 @@ html,body{
   font-family:'Cormorant Garamond',serif;
   color:var(--ink);
 }
- 
+
 .wrap{
   max-width:760px;
   margin:0 auto;
   padding:34px 20px 70px;
 }
- 
+
 .banner-frame{
   border:6px solid var(--gold);
   border-radius:4px;
@@ -46,7 +46,7 @@ html,body{
   width:100%;
   height:auto;
 }
- 
+
 .tagline{
   text-align:center;
   font-style:italic;
@@ -55,7 +55,7 @@ html,body{
   margin:0 0 40px;
   letter-spacing:0.02em;
 }
- 
+
 .divider{
   display:flex;
   align-items:center;
@@ -75,13 +75,13 @@ html,body{
   text-transform:uppercase;
   color:var(--gold);
 }
- 
+
 .tools{
   display:flex;
   flex-direction:column;
   gap:20px;
 }
- 
+
 .tool-card{
   display:flex;
   align-items:center;
@@ -100,7 +100,7 @@ html,body{
   transform: translateY(-2px);
   box-shadow: 0 8px 22px rgba(122,46,31,0.22), inset 0 0 0 1px rgba(255,255,255,0.5);
 }
- 
+
 .tool-text h2{
   font-family:'Cinzel Decorative',serif;
   font-size:22px;
@@ -113,20 +113,20 @@ html,body{
   font-size:16px;
   color:#5a4a35;
 }
- 
+
 .tool-arrow{
   font-family:'Cinzel Decorative',serif;
   font-size:22px;
   color:var(--gold);
   flex-shrink:0;
 }
- 
+
 .tool-card.disabled{
   opacity:0.55;
   pointer-events:none;
   border-style:dashed;
 }
- 
+
 .site-nav{
   text-align:center;
   font-size:12px;
@@ -149,7 +149,7 @@ html,body{
   margin:0 10px;
   opacity:0.5;
 }
- 
+
 footer{
   text-align:center;
   margin-top:50px;
@@ -161,7 +161,7 @@ footer{
 </head>
 <body>
 <div class="wrap">
- 
+
   <nav class="site-nav">
     <span class="current">Home</span>
     <span class="sep">&middot;</span>
@@ -170,16 +170,18 @@ footer{
     <a href="vampire_countdown.html">Vampire Countdown Clock</a>
     <span class="sep">&middot;</span>
     <a href="the_gathering.html">The Gathering</a>
+    <span class="sep">&middot;</span>
+    <a href="rules.html">Rules</a>
   </nav>
- 
+
   <div class="banner-frame">
     <img src="SGP.png" alt="Sparklegremlin Palace">
   </div>
- 
+
   <p class="tagline">A home for our stories, our rolls, and our roles.</p>
- 
+
   <div class="divider"><span>Tools</span></div>
- 
+
   <div class="tools">
     <a class="tool-card" href="shiki_fate_wheel.html">
       <div class="tool-text">
@@ -188,7 +190,7 @@ footer{
       </div>
       <div class="tool-arrow">&#10148;</div>
     </a>
- 
+
     <a class="tool-card" href="vampire_countdown.html">
       <div class="tool-text">
         <h2>The Vampire Countdown Clock</h2>
@@ -196,7 +198,7 @@ footer{
       </div>
       <div class="tool-arrow">&#10148;</div>
     </a>
- 
+
     <a class="tool-card" href="the_gathering.html">
       <div class="tool-text">
         <h2>The Gathering</h2>
@@ -204,13 +206,17 @@ footer{
       </div>
       <div class="tool-arrow">&#10148;</div>
     </a>
+
+    <a class="tool-card" href="rules.html">
+      <div class="tool-text">
+        <h2>Rules</h2>
+        <p>Premise, roles, setup, and the full night order.</p>
+      </div>
+      <div class="tool-arrow">&#10148;</div>
+    </a>
   </div>
- 
+
   <footer>Sparklegremlin Palace &middot; Roleplay Fun Tools</footer>
 </div>
 </body>
 </html>
- 
-
-
-
