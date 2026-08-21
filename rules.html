@@ -134,6 +134,30 @@ p{ line-height:1.7; font-size:17px; }
   height:auto;
 }
 
+.roles-grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:16px;
+  max-width:720px;
+  margin:0 auto;
+}
+.roles-grid figure{
+  margin:0;
+  border:1px solid var(--dried-blood);
+  border-radius:6px;
+  overflow:hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+.roles-grid img{
+  display:block;
+  width:100%;
+  aspect-ratio: 1 / 1;
+  object-fit:cover;
+}
+@media (max-width:640px){
+  .roles-grid{ grid-template-columns: repeat(2, 1fr); max-width:480px; }
+}
+
 .win-list{
   list-style:none;
   padding:0;
@@ -196,8 +220,13 @@ footer{
 
   <section>
     <h2>Roles</h2>
-    <div class="roles-frame">
-      <img src="rr.png" alt="Role cards: The Villager, The Seer, The Healer, The Hunter, The Familiar, The Vampire">
+    <div class="roles-grid">
+      <figure><img src="Villagerc.png" alt="The Villager"></figure>
+      <figure><img src="Hunterc.png" alt="The Hunter"></figure>
+      <figure><img src="Vampirec.png" alt="The Vampire"></figure>
+      <figure><img src="Healerc.png" alt="The Healer"></figure>
+      <figure><img src="Seerc.png" alt="The Seer"></figure>
+      <figure><img src="Familiarc.png" alt="The Familiar"></figure>
     </div>
   </section>
 
