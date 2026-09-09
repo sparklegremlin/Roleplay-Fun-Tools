@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Dice</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root{
+  --void: #0a0709;
+  --dried-blood: #4a0e0e;
+  --blood: #7a1620;
+  --blood-bright: #a8232e;
+  --candle: #c9a24b;
+  --candle-bright: #e8c877;
+  --parchment: #ddd0b8;
+}
+
+*{ box-sizing:border-box; }
+
+html,body{
+  margin:0;
+  padding:0;
+  min-height:100vh;
+  background: radial-gradient(ellipse at 50% 12%, #1a1013 0%, var(--void) 55%, #030202 100%);
+  font-family:'Cormorant Garamond',serif;
+  color:var(--parchment);
+}
+
+.wrap{
+  max-width:640px;
+  margin:0 auto;
+  padding:34px 20px 70px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.site-nav{
+  text-align:center;
+  font-size:12px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  margin-bottom:20px;
+}
+.site-nav a{ color:var(--parchment); text-decoration:none; opacity:0.6; }
+.site-nav a:hover{ opacity:1; color:var(--candle-bright); }
+.site-nav .current{ color:var(--candle-bright); opacity:1; }
+.site-nav .sep{ color:var(--blood); margin:0 10px; opacity:0.6; }
+
+h1{
+  font-family:'Cinzel Decorative',serif;
+  font-weight:900;
+  font-size:clamp(24px,5vw,36px);
+  letter-spacing:0.04em;
+  color:var(--candle-bright);
+  text-align:center;
+  margin:6px 0 2px;
+  text-shadow: 0 0 18px rgba(201,162,75,0.35), 0 0 2px rgba(0,0,0,0.8);
+}
+.subtitle{
+  text-align:center;
+  font-style:italic;
+  color:#a89a86;
+  font-size:16px;
+  margin:0 0 28px;
+}
+
+.die-tabs{
+  display:flex;
+  gap:10px;
+  margin-bottom:26px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.die-tab{
+  font-family:'Cinzel Decorative',serif;
+  font-size:14px;
+  letter-spacing:0.06em;
+  background:none;
+  border:1px solid var(--dried-blood);
+  color:var(--parchment);
+  padding:9px 18px;
+  border-radius:3px;
+  cursor:pointer;
+}
+.die-tab:hover{ background:rgba(122,22,32,0.15); border-color:var(--blood); }
+.die-tab.active{ background:rgba(122,22,32,0.3); border-color:var(--blood-bright); color:var(--candle-bright); }
+
+.die-wrap{
+  position:relative;
+  width:170px;
+  height:170px;
+  margin-bottom:18px;
+}
+.die-glow{
+  position:absolute;
+  inset:-26px;
+  border-radius:26px;
+  background:radial-gradient(circle, rgba(122,22,32,0.25) 0%, transparent 70%);
+  filter:blur(9px);
+  animation:pulse 2.8s ease-in-out infinite;
+}
+@keyframes pulse{ 0%,100%{opacity:0.5;} 50%{opacity:1;} }
+.die{
+  position:relative;
+  width:100%;
+  height:100%;
+  background: linear-gradient(160deg,#2a1417,#150a0c);
+  border:2px solid var(--dried-blood);
+  border-radius:22px;
+  box-shadow: 0 0 24px rgba(122,22,32,0.3), inset 0 0 20px rgba(0,0,0,0.6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition: transform 0.08s linear;
+  user-select:none;
+}
+.die.rolling{ animation: rattle 0.08s linear infinite; }
+@keyframes rattle{
+  0%{ transform: rotate(0deg) scale(1); }
+  25%{ transform: rotate(-6deg) scale(0.97); }
+  50%{ transform: rotate(5deg) scale(1.02); }
+  75%{ transform: rotate(-4deg) scale(0.98); }
+  100%{ transform: rotate(0deg) scale(1); }
+}
+.die-number{
+  font-family:'Cinzel Decorative',serif;
+  font-size:68px;
+  color:var(--candle-bright);
+  text-shadow: 0 0 20px rgba(201,162,75,0.6);
+}
+.die-icon{
+  width:88px;
+  height:88px;
+  object-fit:contain;
+}
+
+.roll-btn{
+  font-family:'Cinzel Decorative',serif;
+  font-size:16px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  background: linear-gradient(180deg,#5a1017,#3a0a0e);
+  color:var(--candle-bright);
+  border:1px solid var(--blood);
+  padding:13px 34px;
+  border-radius:3px;
+  cursor:pointer;
+  box-shadow: 0 0 16px rgba(122,22,32,0.3), inset 0 0 10px rgba(0,0,0,0.5);
+  margin: 6px 0 10px;
+}
+.roll-btn:hover{ box-shadow: 0 0 24px rgba(122,22,32,0.55), inset 0 0 10px rgba(0,0,0,0.5); }
+.roll-btn:disabled{ opacity:0.4; cursor:default; }
+
+.result-label{
+  font-family:'Cinzel Decorative',serif;
+  font-size:15px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  min-height:22px;
+  opacity:0;
+  transition: opacity 0.3s ease;
+}
+.result-label.show{ opacity:1; }
+.result-label.life{ color:var(--candle-bright); }
+.result-label.death{ color:var(--blood-bright); }
+
+footer{
+  text-align:center;
+  margin-top:34px;
+  font-size:13px;
+  font-style:italic;
+  color:#5a4a4a;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="site-nav">
+    <a href="index.html">Home</a>
+    <span class="sep">&middot;</span>
+    <a href="shiki_fate_wheel.html">Wheel of Fates</a>
+    <span class="sep">&middot;</span>
+    <a href="vampire_countdown.html">Vampire Countdown Clock</a>
+    <span class="sep">&middot;</span>
+    <a href="the_gathering.html">The Gathering</a>
+    <span class="sep">&middot;</span>
+    <a href="rules.html">Rules</a>
+    <span class="sep">&middot;</span>
+    <span class="current">The Dice</span>
+  </nav>
+
+  <h1>The Dice</h1>
+  <p class="subtitle">Fate is cast, not chosen.</p>
+
+  <div class="die-tabs">
+    <button class="die-tab active" data-die="d6">1d6</button>
+    <button class="die-tab" data-die="d20">1d20</button>
+    <button class="die-tab" data-die="ld">Life / Death</button>
+  </div>
+
+  <div class="die-wrap">
+    <div class="die-glow"></div>
+    <div class="die" id="die"><span class="die-number" id="dieNumber">?</span></div>
+  </div>
+
+  <button class="roll-btn" id="rollBtn">Roll</button>
+  <div class="result-label" id="resultLabel"></div>
+
+  <footer>Three nights. One town. Somewhere among you, Carmilla's hunger is wearing a familiar face.</footer>
+</div>
+
+<script>
+const dieEl = document.getElementById('die');
+const dieNumberEl = document.getElementById('dieNumber');
+const rollBtn = document.getElementById('rollBtn');
+const resultLabel = document.getElementById('resultLabel');
+const tabs = document.querySelectorAll('.die-tab');
+
+let currentDie = 'd6';
+let rolling = false;
+
+const skullSVG = '<img class="die-icon" src="skull.png" alt="Death">';
+const wingsSVG = '<img class="die-icon" src="wings.png" alt="Life">';
+
+function setActiveTab(die){
+  currentDie = die;
+  tabs.forEach(t => t.classList.toggle('active', t.dataset.die === die));
+  resultLabel.classList.remove('show');
+  if(die === 'ld'){
+    dieEl.innerHTML = '<span class="die-number" style="font-size:32px;">?</span>';
+  } else {
+    dieEl.innerHTML = '<span class="die-number" id="dieNumber">?</span>';
+  }
+}
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    if(rolling) return;
+    setActiveTab(tab.dataset.die);
+  });
+});
+
+function roll(){
+  if(rolling) return;
+  rolling = true;
+  rollBtn.disabled = true;
+  resultLabel.classList.remove('show');
+  dieEl.classList.add('rolling');
+
+  let ticks = 0;
+  const maxTicks = 18;
+  const rattleInterval = setInterval(()=>{
+    renderFace(randomFace());
+    ticks++;
+    if(ticks >= maxTicks){
+      clearInterval(rattleInterval);
+      finishRoll();
+    }
+  }, 65);
+}
+
+function randomFace(){
+  if(currentDie === 'd6') return Math.floor(Math.random()*6)+1;
+  if(currentDie === 'd20') return Math.floor(Math.random()*20)+1;
+  return Math.random() < 0.5 ? 'life' : 'death';
+}
+
+function renderFace(face){
+  if(currentDie === 'ld'){
+    dieEl.innerHTML = face === 'life' ? wingsSVG : skullSVG;
+  } else {
+    dieEl.innerHTML = '<span class="die-number">' + face + '</span>';
+  }
+}
+
+function finishRoll(){
+  dieEl.classList.remove('rolling');
+  const result = randomFace();
+  renderFace(result);
+
+  if(currentDie === 'ld'){
+    resultLabel.textContent = result === 'life' ? 'Life' : 'Death';
+    resultLabel.className = 'result-label show ' + result;
+  } else {
+    resultLabel.textContent = 'Rolled ' + result;
+    resultLabel.className = 'result-label show';
+  }
+
+  rollBtn.disabled = false;
+  rolling = false;
+}
+
+rollBtn.addEventListener('click', roll);
+</script>
+</body>
+</html>
