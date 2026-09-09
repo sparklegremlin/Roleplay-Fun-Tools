@@ -169,7 +169,7 @@ h1{
 footer{
   text-align:center;
   margin-top:34px;
-  font-size:13px;
+  font-size:19px;
   font-style:italic;
   color:#5a4a4a;
 }
@@ -181,24 +181,19 @@ footer{
   <nav class="site-nav">
     <a href="index.html">Home</a>
     <span class="sep">&middot;</span>
-    <a href="shiki_fate_wheel.html">Wheel of Fates</a>
+    <a href="CarmillaDMDash.html">Carmilla Dm Dash</a>
     <span class="sep">&middot;</span>
-    <a href="vampire_countdown.html">Vampire Countdown Clock</a>
+    <a href="vampire_countdown.html">Carmilla Countdown</a>
     <span class="sep">&middot;</span>
-    <a href="the_gathering.html">The Gathering</a>
-    <span class="sep">&middot;</span>
-    <a href="rules.html">Rules</a>
+    <a href="rules.html">Carmilla Rules</a>
     <span class="sep">&middot;</span>
     <span class="current">The Dice</span>
   </nav>
 
-  <h1>The Dice</h1>
-  <p class="subtitle">Fate is cast, not chosen.</p>
-
   <div class="die-tabs">
-    <button class="die-tab active" data-die="d6">1d6</button>
-    <button class="die-tab" data-die="d20">1d20</button>
-    <button class="die-tab" data-die="ld">Life / Death</button>
+    <button class="die-tab" data-die="d6">Roll 1d6</button>
+    <button class="die-tab" data-die="d20">Roll 1d20</button>
+    <button class="die-tab" data-die="ld">Roll Life / Death</button>
   </div>
 
   <div class="die-wrap">
@@ -206,7 +201,6 @@ footer{
     <div class="die" id="die"><span class="die-number" id="dieNumber">?</span></div>
   </div>
 
-  <button class="roll-btn" id="rollBtn">Roll</button>
   <div class="result-label" id="resultLabel"></div>
 
   <footer>Three nights. One town. Somewhere among you, Carmilla's hunger is wearing a familiar face.</footer>
@@ -214,8 +208,6 @@ footer{
 
 <script>
 const dieEl = document.getElementById('die');
-const dieNumberEl = document.getElementById('dieNumber');
-const rollBtn = document.getElementById('rollBtn');
 const resultLabel = document.getElementById('resultLabel');
 const tabs = document.querySelectorAll('.die-tab');
 
@@ -229,24 +221,20 @@ function setActiveTab(die){
   currentDie = die;
   tabs.forEach(t => t.classList.toggle('active', t.dataset.die === die));
   resultLabel.classList.remove('show');
-  if(die === 'ld'){
-    dieEl.innerHTML = '<span class="die-number" style="font-size:32px;">?</span>';
-  } else {
-    dieEl.innerHTML = '<span class="die-number" id="dieNumber">?</span>';
-  }
 }
 
 tabs.forEach(tab => {
   tab.addEventListener('click', () => {
     if(rolling) return;
     setActiveTab(tab.dataset.die);
+    roll();
   });
 });
 
 function roll(){
   if(rolling) return;
   rolling = true;
-  rollBtn.disabled = true;
+  tabs.forEach(t => t.disabled = true);
   resultLabel.classList.remove('show');
   dieEl.classList.add('rolling');
 
@@ -289,24 +277,9 @@ function finishRoll(){
     resultLabel.className = 'result-label show';
   }
 
-  rollBtn.disabled = false;
   rolling = false;
+  tabs.forEach(t => t.disabled = false);
 }
-
-rollBtn.addEventListener('click', roll);
-
-// Discord Activity handshake — only matters when running inside Discord.
-// Falls through silently in a normal browser tab.
-(async () => {
-  try {
-    const { DiscordSDK } = await import('https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk/+esm');
-    const discordSdk = new DiscordSDK('1547252769172234411'); // Carmilla Dice — Application ID
-    await discordSdk.ready();
-    console.log('Running inside Discord — SDK ready.');
-  } catch (e) {
-    console.log('Not running inside Discord, or SDK unavailable — page works normally.');
-  }
-})();
 </script>
 </body>
 </html>
