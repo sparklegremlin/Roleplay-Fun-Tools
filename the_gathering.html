@@ -17,6 +17,9 @@
   --familiar-purple: #6a4fb0;
   --vampire-red: #a8232e;
   --human: #4a7a5a;
+  --role-enemy: #d9464f;
+  --role-villager: #e8c877;
+  --role-specialist: #a98af0;
 }
 
 *{ box-sizing:border-box; }
@@ -246,6 +249,60 @@ textarea#playerNames:focus{ border-color:var(--blood); box-shadow:0 0 6px rgba(1
 .tag-familiar{ background:rgba(106,79,176,0.2); color:var(--familiar-purple); border:1px solid rgba(106,79,176,0.5); }
 .tag-human{ background:rgba(74,122,90,0.15); color:var(--human); border:1px solid rgba(74,122,90,0.4); }
 
+.role-enemy{ color:var(--role-enemy); }
+.role-villager{ color:var(--role-villager); }
+.role-specialist{ color:var(--role-specialist); }
+
+.view-toggle{
+  display:flex;
+  gap:8px;
+  margin-bottom:16px;
+}
+.view-toggle button{
+  font-family:'Cormorant Garamond',serif;
+  font-size:13px;
+  background:none;
+  border:1px solid var(--dried-blood);
+  color:var(--parchment);
+  padding:7px 14px;
+  border-radius:3px;
+  cursor:pointer;
+  opacity:0.7;
+}
+.view-toggle button:hover{ opacity:1; border-color:var(--blood); }
+.view-toggle button.active{ opacity:1; background:rgba(122,22,32,0.25); border-color:var(--blood-bright); color:var(--candle-bright); }
+
+.overview-note{
+  font-size:12px;
+  font-style:italic;
+  color:#8a6a6a;
+  margin-bottom:14px;
+}
+.overview-list{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.overview-row{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  padding:9px 4px;
+  border-bottom:1px solid rgba(122,22,32,0.2);
+  font-size:16px;
+}
+.overview-row:last-child{ border-bottom:none; }
+.overview-row .oname{
+  font-family:'Cinzel Decorative',serif;
+  font-size:16px;
+  color:var(--parchment);
+}
+.overview-row.dead .oname{ opacity:0.5; text-decoration:line-through; }
+.overview-row .orole{
+  font-weight:600;
+  letter-spacing:0.03em;
+}
+
 .veil{
   position:fixed; inset:0;
   background: rgba(4,2,3,0.92);
@@ -332,6 +389,10 @@ footer{
     <a href="vampire_countdown.html">Vampire Countdown Clock</a>
     <span class="sep">&middot;</span>
     <span class="current">The Gathering</span>
+    <span class="sep">&middot;</span>
+    <a href="rules.html">Rules</a>
+    <span class="sep">&middot;</span>
+    <a href="the_dice.html">The Dice</a>
   </nav>
 
   <h1>The Gathering</h1>
@@ -349,13 +410,13 @@ footer{
 
       <div class="deck-grid">
         <div class="deck-row">
-          <div class="label">Villager<small>default role &mdash; fills remaining players</small></div>
+          <div class="label">Villager<small>(Villager) default role &mdash; fills remaining players</small></div>
           <div class="stepper">
             <span id="villagerCount">0</span>
           </div>
         </div>
         <div class="deck-row">
-          <div class="label">Seer<small>learns truth, once</small></div>
+          <div class="label">Seer<small>(Specialist) learns truth, once</small></div>
           <div class="stepper">
             <button onclick="adjust('seer',-1)">&minus;</button>
             <span id="seerCount">0</span>
@@ -363,7 +424,7 @@ footer{
           </div>
         </div>
         <div class="deck-row">
-          <div class="label">Hunter<small>can stake, once</small></div>
+          <div class="label">Hunter<small>(Specialist) can stake, once</small></div>
           <div class="stepper">
             <button onclick="adjust('hunter',-1)">&minus;</button>
             <span id="hunterCount">0</span>
@@ -371,7 +432,7 @@ footer{
           </div>
         </div>
         <div class="deck-row">
-          <div class="label">Healer<small>can shield, once</small></div>
+          <div class="label">Healer<small>(Villager) can shield, once</small></div>
           <div class="stepper">
             <button onclick="adjust('healer',-1)">&minus;</button>
             <span id="healerCount">0</span>
@@ -379,7 +440,7 @@ footer{
           </div>
         </div>
         <div class="deck-row">
-          <div class="label">Vampire<small>feeds each night</small></div>
+          <div class="label">Vampire<small>(Enemy) feeds each night</small></div>
           <div class="stepper">
             <button onclick="adjust('vampire',-1)">&minus;</button>
             <span id="vampireCount">0</span>
@@ -387,7 +448,7 @@ footer{
           </div>
         </div>
         <div class="deck-row">
-          <div class="label">Familiar<small>knows the Vampire</small></div>
+          <div class="label">Familiar<small>(Enemy) knows the Vampire</small></div>
           <div class="stepper">
             <button onclick="adjust('familiar',-1)">&minus;</button>
             <span id="familiarCount">0</span>
@@ -404,8 +465,14 @@ footer{
 
   <div id="step2">
     <div class="panel">
-      <div class="panel-label">The Roster &mdash; click a name to reveal their card</div>
+      <div class="panel-label">The Roster</div>
+      <div class="view-toggle">
+        <button id="viewRevealBtn" class="active" onclick="setViewMode('reveal')">Click to Reveal</button>
+        <button id="viewOverviewBtn" onclick="setViewMode('overview')">DM Overview</button>
+      </div>
       <div class="roster" id="roster"></div>
+      <div class="overview-note" id="overviewNote" style="display:none;">DM's eyes only &mdash; don't share this view with the table.</div>
+      <div class="overview-list" id="overviewList" style="display:none;"></div>
     </div>
     <button class="ghost-btn" onclick="resetAll()">Start a New Gathering</button>
   </div>
@@ -433,14 +500,25 @@ const deck = { villager:0, seer:0, hunter:0, healer:0, vampire:0, familiar:0 };
 let players = [];
 let currentRevealIndex = null;
 
-const abilityText = {
-  Villager: "No power of your own, but your voice carries weight: once per game, your vote at a Staking counts twice.",
-  Seer: "Once per game, you may ask the DM in private whether one player is truly a Vampire. The answer will be the truth.",
-  Hunter: "Once per game, during a Feeding, you may name a suspected Vampire to stake. If you are right, the Castle falls. If you are wrong, your target still dies \u2014 and your gift is spent.",
-  Healer: "Once per game, during a Feeding, you may shield one player from that night's hunger. Choose carefully \u2014 the gift only works once.",
-  Vampire: "Each Feeding, you choose a player to take. If more than one Vampire walks among the village, you share your hunger and must agree on a single target.",
-  Familiar: "You know the true face of the Castle's Vampire(s). Once per game, you may throw yourself between them and the village's judgment, shielding them from a single Staking."
+const classification = {
+  Villager: 'villager',
+  Healer: 'villager',
+  Hunter: 'specialist',
+  Seer: 'specialist',
+  Vampire: 'enemy',
+  Familiar: 'enemy'
 };
+
+const abilityText = {
+  Villager: "No power. Vote counts for 2 at the nightly cast. Cannot be blocked.\n\n*Being bitten twice turns the villager.*",
+  Seer: "Once per Sleep: receive a vision.\n\nActivation: DM your selection during Sleep; the Mayor confirms or denies.",
+  Hunter: "Once per game: stake a suspected Vampire during Sleep (risk: 1 round in cage if wrong).\nOnce per game: request a Fact Check on info divulged during play.\n\nActivation: anytime during Discussion/Voting.",
+  Healer: "Once per Sleep: protect one player from that night's feeding.\n\nActivation: DM your selection during Sleep.",
+  Vampire: "Feeds on one living player every Sleep phase. Cannot be role blocked.\nFamiliars and Caged Villagers (if selected) receive Vampire Bite Marks.\nAlways knows fellow Vampires.\n\n*Does not know who is a Familiar.*",
+  Familiar: "Target and role block one living player. Chance of turning upon death.\n\nActivation: DM your selection during Sleep; the Mayor notifies the blocked player at activation.\n\nKnows who the Vampire is."
+};
+
+let viewMode = 'reveal';
 
 
 
@@ -502,7 +580,9 @@ function validate(){
     btn.disabled = true;
     return;
   }
-  status.textContent = n + " players. " + deck.villager + " will default to Villager. Deck is ready.";
+  const villagerClassCount = deck.villager + deck.healer;
+  const pct = n > 0 ? Math.round((villagerClassCount / n) * 100) : 0;
+  status.textContent = n + " players. " + villagerClassCount + " Villager-classified (" + pct + "%) \u2014 " + deck.villager + " Villager + " + deck.healer + " Healer. Deck is ready.";
   status.className = "status-line status-ok";
   btn.disabled = false;
 }
@@ -543,6 +623,7 @@ function dealCards(){
 
   document.getElementById('step1').style.display = 'none';
   document.getElementById('step2').style.display = 'block';
+  setViewMode('reveal');
   renderRoster();
 }
 
@@ -565,7 +646,7 @@ function renderRoster(){
     } else {
       inner += '<div class="player-status dead-tag">Taken / Staked</div>';
       inner += '<div class="dead-role">';
-      inner += '<span class="tag tag-ability">' + p.ability + '</span>';
+      inner += '<span class="tag tag-ability role-' + classification[p.ability] + '">' + p.ability + '</span>';
       inner += '</div>';
     }
 
@@ -592,13 +673,38 @@ function renderRoster(){
   });
 }
 
+function setViewMode(mode){
+  viewMode = mode;
+  document.getElementById('viewRevealBtn').classList.toggle('active', mode==='reveal');
+  document.getElementById('viewOverviewBtn').classList.toggle('active', mode==='overview');
+  document.getElementById('roster').style.display = mode==='reveal' ? 'grid' : 'none';
+  document.getElementById('overviewNote').style.display = mode==='overview' ? 'block' : 'none';
+  document.getElementById('overviewList').style.display = mode==='overview' ? 'flex' : 'none';
+  if(mode==='overview') renderOverview();
+}
+
+function renderOverview(){
+  const list = document.getElementById('overviewList');
+  list.innerHTML = '';
+  players.forEach(p => {
+    const row = document.createElement('div');
+    row.className = 'overview-row' + (p.alive ? '' : ' dead');
+    row.innerHTML =
+      '<span class="oname">' + escapeHtml(p.name) + '</span>' +
+      '<span class="orole role-' + classification[p.ability] + '">The ' + p.ability + '</span>';
+    list.appendChild(row);
+  });
+}
+
 function killPlayer(i){
   players[i].alive = false;
   renderRoster();
+  if(viewMode==='overview') renderOverview();
 }
 function revivePlayer(i){
   players[i].alive = true;
   renderRoster();
+  if(viewMode==='overview') renderOverview();
 }
 
 function escapeHtml(str){
@@ -622,7 +728,9 @@ function openReveal(i){
   currentRevealIndex = i;
   const p = players[i];
   document.getElementById('revealName').textContent = p.name;
-  document.getElementById('revealAbility').textContent = 'The ' + p.ability;
+  const abilityEl = document.getElementById('revealAbility');
+  abilityEl.textContent = 'The ' + p.ability;
+  abilityEl.className = 'reveal-ability role-' + classification[p.ability];
   document.getElementById('revealText').textContent = buildRevealText(p);
   document.getElementById('copiedMsg').textContent = '';
   document.getElementById('veil').classList.add('show');
