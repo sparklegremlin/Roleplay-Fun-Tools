@@ -294,6 +294,19 @@ function finishRoll(){
 }
 
 rollBtn.addEventListener('click', roll);
+
+// Discord Activity handshake — only matters when running inside Discord.
+// Falls through silently in a normal browser tab.
+(async () => {
+  try {
+    const { DiscordSDK } = await import('https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk/+esm');
+    const discordSdk = new DiscordSDK('1547252769172234411'); // Carmilla Dice — Application ID
+    await discordSdk.ready();
+    console.log('Running inside Discord — SDK ready.');
+  } catch (e) {
+    console.log('Not running inside Discord, or SDK unavailable — page works normally.');
+  }
+})();
 </script>
 </body>
 </html>
