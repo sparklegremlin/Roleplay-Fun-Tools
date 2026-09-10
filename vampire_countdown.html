@@ -418,7 +418,7 @@ function start(){
   intervalId = setInterval(tick, 1000);
   try{
     tickSound.currentTime = 0;
-    tickSound.volume = 0.5;
+    tickSound.volume = 0.25;
     tickSound.play().catch(()=>{});
   }catch(e){}
 }
